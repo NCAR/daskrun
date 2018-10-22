@@ -9,6 +9,8 @@ import string
 from dask_jobqueue import PBSCluster
 import daskrun
 
+global cluster = None
+
 version = daskrun.__version__
 
 _JOB_TEMPLATE = """
@@ -68,6 +70,7 @@ def submit_scheduler_job(
 
 @click.command()
 @click.version_option(version=version)
+@click.option("--script", default=None, type=str, show_default=True, help="Script to run")
 @click.option(
     "--num-workers", default=1, type=int, show_default=True, help="Number of workers"
 )
@@ -106,14 +109,18 @@ def submit_scheduler_job(
     show_default=True,
     help="Accounting string associated with each worker job. Passed to #PBS -A option.",
 )
-def cli(num_workers, cores, memory, walltime, queue, project):
-    print(num_workers, cores, memory, walltime, queue, project)
-    submit_scheduler_job(queue=queue, project=project, walltime=walltime)
-    cluster = PBSCluster(
-        cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
-    )
-    cluster.scale(num_workers)
 
+def cli(script, num_workers, cores, memory, walltime, queue, project):
+    print(script, num_workers, cores, memory, walltime, queue, project)
+    # submit_scheduler_job(queue=queue, project=project, walltime=walltime)
+    if not cluster or not isinstance(cluster, PBSCluster):
+        cluster = PBSCluster(
+            cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
+        )
+        cluster.scale(num_workers)
+
+    cmd = ["python", script]
+    subprocess.check_call(cmd)
 
 # submit_scheduler_job()
 if __name__ == "__main__":
