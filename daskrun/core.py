@@ -15,7 +15,7 @@ _JOB_TEMPLATE = """
 #!/usr/bin/env bash
 #PBS -N {name}
 #PBS -q {queue}
-#PBS -A {project_id}
+#PBS -A {project}
 #PBS -l select={num_nodes}:ncpus={num_cpus}:mpiprocs={num_mpiproc}
 #PBS -l walltime={walltime}
 #PBS -j oe
