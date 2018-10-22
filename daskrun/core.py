@@ -9,7 +9,8 @@ import string
 from dask_jobqueue import PBSCluster
 import daskrun
 
-global cluster = None
+global cluster 
+cluster = None
 
 version = daskrun.__version__
 
