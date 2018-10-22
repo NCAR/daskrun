@@ -80,7 +80,7 @@ def submit_scheduler_job(
 )
 @click.option(
     "--memory",
-    default="",
+    default=None,
     type=str,
     show_default=True,
     help="Total amount of memory per job",
