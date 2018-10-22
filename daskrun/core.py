@@ -113,6 +113,7 @@ def submit_scheduler_job(
 
 def cli(script, num_workers, cores, memory, walltime, queue, project):
     print(script, num_workers, cores, memory, walltime, queue, project)
+    global cluster
     # submit_scheduler_job(queue=queue, project=project, walltime=walltime)
     if not cluster or not isinstance(cluster, PBSCluster):
         cluster = PBSCluster(
