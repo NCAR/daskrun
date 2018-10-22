@@ -10,7 +10,7 @@ with open("README.md", encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
 
-requirements = ["dask-jobqueue]
+requirements = ["dask-jobqueue"]
 
 test_requirements = ["pytest", "flake8"]
 
@@ -32,7 +32,7 @@ setup(
     include_package_data=True,
     keywords=["daskrun", "dask", "dask-jobqueue"],
     name="daskrun",
-    packages=find_packages(include=["daskrun",]),
+    packages=find_packages(include=["daskrun"]),
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/NCAR/daskrun",
