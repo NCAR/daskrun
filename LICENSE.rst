@@ -10,7 +10,7 @@ as an agent for your company, institution or other entity) (collectively, "you" 
 Corporation for Atmospheric Research ("UCAR").
 
 1. **License Grant to Technology.** UCAR grants to Licensee a restricted, royalty-free, perpetual, nonexclusive, 
-   nontransferable, noncommercial license to copy, modify, enhance, improve and use the NCAR PyReshaper code set for 
+   nontransferable, noncommercial license to copy, modify, enhance, improve and use the NCAR daskrun code set for 
    transforming NetCDF time-slice datasets into NetCDF time-series format provided in source code format (**Technology**) 
    for research purposes and for collaborating with UCAR only; provided, however, that Licensee does not commercialize, 
    sell, license, distribute, or transfer the Technology, or any work that contains the Technology. Licensee may freely 
