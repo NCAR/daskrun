@@ -38,8 +38,6 @@ Under the hood, `daskrun` is doing the following:
 - Next, once the `dask-workers` are up and running, `dask-scheduler` is ready to launch, manage jobs on the created `dask-workers`. 
 - Once all jobs are finished, the created dask cluster is teared down, and we are done. 
 
-NOTE: 
-
 
 ## Installation 
 
@@ -104,7 +102,23 @@ client.write_scheduler_file("./dask-scheduler.json")
 
 ```daskrun --script example.py --num-workers 2 --project PROJECTID --cores 1```
 
-By inspecting the created `dask-scheduler.json` file, we expect to see two dask workers information along side dask's scheduler information.
+
+NOTE: when you execute ```daskrun ...[options] --script myscript.py```, the total number of submitted jobs equals to the number of dask-workers  specified via the `--num-workers` argument. In other words, each dask-worker is launched in an independent job 
+
+For instance, this is what we get when we run `example.py` script with two `dask-workers`:
+
+```bash
+abanihi@cheyenne5: ~ $ qstat -u $USER
+
+chadmin1: 
+                                                            Req'd  Req'd   Elap
+Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+--------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+3085027.chadmin abanihi  economy  dask-worke    --    1   1    --  00:20 Q   -- 
+3085028.chadmin abanihi  economy  dask-worke    --    1   1    --  00:20 Q   -- 
+```
+
+To verify that our `example.py` script was executed with two `dask-workers`, let's inspect the created `dask-scheduler.json` file. We expect to see two dask workers information along side dask's scheduler information.
 
 ```json
 {
