@@ -120,7 +120,8 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
     cluster.scale(num_workers)
     if os.path.exists('~/.daskrun/dask-run-scheduler.json'):
         os.remove('~/.daskrun/dask-run-scheduler.json')
-        
+
+    os.makedirs('~/.daskrun')
     with open('~/.daskrun/dask-run-scheduler.json', 'w') as f:
         f.write(json.dumps({'scheduler': cluster.scheduler_address}))
 
