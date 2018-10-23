@@ -49,6 +49,9 @@ pip install git+git://github.com/NCAR/daskrun.git@v.0.1.0
 ```
 
 
+## Usage 
+
+`daskrun` allows you to specify the following arguments:
 
 ```bash
 abanihi@cheyenne5: ~ $ daskrun --help
@@ -71,9 +74,6 @@ Options:
                            [default: /glade/scratch/abanihi]
   --help                   Show this message and exit.
 ```
-
-
-## Usage 
 
 To use daskrun, you need to include the following lines in your script:
 
