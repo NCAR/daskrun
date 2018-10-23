@@ -68,7 +68,7 @@ version = daskrun.__version__
 )
 @click.option(
     "--cores",
-    default=5,
+    default=1,
     type=int,
     show_default=True,
     help="Total number of cores per job",

@@ -27,13 +27,18 @@ With `daskrun`, everything is done for you from the command line:
 
     daskrun --script example.py --cores $NCORES --project $ACCOUNT --queue $QUEUE --walltime $WALLTIME
 
+
+Another difference is that the `--cores`, `--memory`, `--num-processes` keywords used in `daskrun` correspond not to your full desired deployment, but rather to the size of a single job which should be no larger than the size of a single machine in your cluster. 
+Separately **the number of jobs** to deploy corresponds to number of workers specified via `--num-workers` keyword argument. 
+
+
 Under the hood, `daskrun` is doing the following:
 - Get all the specific scheduler keywords such as `project`, `queue`, `walltime`, etc., and submits jobs to the scheduler via [dask-jobqueue](https://dask-jobqueue.readthedocs.io/en/latest/). This creates a dask cluster with the specified resources.  
 - After this step, dask launches `dask-workers` on requested resources.
 - Next, once the `dask-workers` are up and running, `dask-scheduler` is ready to launch, manage jobs on the created `dask-workers`. 
 - Once all jobs are finished, the created dask cluster is teared down, and we are done. 
 
-
+NOTE: 
 
 
 ## Installation 
@@ -60,7 +65,7 @@ Options:
   --num-workers INTEGER    Number of workers  [default: 1]
   --num-processes INTEGER  Number of Python processes to cut up each job
                            [default: 1]
-  --cores INTEGER          Total number of cores per job  [default: 5]
+  --cores INTEGER          Total number of cores per job  [default: 1]
   --memory TEXT            Total amount of memory per job
   --local-directory TEXT   Location to put temporary data if necessary
                            [default: /glade/scratch/abanihi]
@@ -97,7 +102,7 @@ print(df.describe().compute())
 client.write_scheduler_file("./dask-scheduler.json")
 ```
 
-```daskrun --script example.py --num-workers 2 --project PROJECTID```
+```daskrun --script example.py --num-workers 2 --project PROJECTID --cores 1```
 
 By inspecting the created `dask-scheduler.json` file, we expect to see two dask workers information along side dask's scheduler information.
 
