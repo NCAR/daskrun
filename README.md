@@ -1,11 +1,11 @@
 # daskrun
  daskrun allows the user to run a script that uses Dask for parallelism in the same way as running a script that uses MPI for parallelism.
 
-## Differences between `mpirun` and `daskrun`
+## Difference between `mpirun` and `daskrun`
 
-To illustrate the difference between `mpirun` and `daskrun`, we are going to assume that we have a python script called `example.py`.
+To illustrate differences between `mpirun` and `daskrun`, we are going to assume that we have a python script called `example.py`.
 
-To execute this script with mpi, you might want to write another script, `submit_job.sh` with the following content:
+To execute this script with mpi, you might have to write another script, `submit_job.sh` with the following content:
 
 ```bash
   #!/bin/bash
