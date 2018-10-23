@@ -1,5 +1,5 @@
 from dask.distributed import Client 
-from daskrun.core import cluster 
+from daskrun.config import scheduler
 
-client = Client(cluster)
+client = Client(scheduler)
 client.write_scheduler_file('dask-scheduler.json')
