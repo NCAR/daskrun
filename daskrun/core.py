@@ -14,17 +14,57 @@ import daskrun
 import json
 import time
 
-
+temp_dir = os.environ["TMPDIR"]
 version = daskrun.__version__
 
 
 @click.command()
 @click.version_option(version=version)
 @click.option(
-    "--script", default=None, type=str, show_default=True, help="Script to run"
+    "--script",
+    "-s",
+    default=None,
+    type=click.Path(exists=True, resolve_path=True),
+    show_default=True,
+    help="Script to run"
 )
 @click.option(
-    "--num-workers", default=1, type=int, show_default=True, help="Number of workers"
+    "--queue",
+    "-q",
+    default="economy",
+    type=str,
+    show_default=True,
+    help="Destination queue for each worker job. Passed to #PBS -q option.",
+)
+@click.option(
+    "--project",
+    "-p",
+    default="",
+    type=str,
+    show_default=True,
+    help="Accounting string associated with each worker job. Passed to #PBS -A option.",
+)
+@click.option(
+    "--walltime",
+    "-w"
+    default="00:20:00",
+    type=str,
+    show_default=True,
+    help="Walltime for each worker job.",
+)
+@click.option(
+    "--num-workers",
+    default=1,
+    type=int,
+    show_default=True,
+    help="Number of workers"
+)
+@click.option(
+    "--num-processes",
+    default=1,
+    type=int,
+    show_default=True,
+    help="Number of Python processes to cut up each job",
 )
 @click.option(
     "--cores",
@@ -41,31 +81,18 @@ version = daskrun.__version__
     help="Total amount of memory per job",
 )
 @click.option(
-    "--walltime",
-    default="00:20:00",
+    "--local-directory",
+    default=temp_dir,
     type=str,
     show_default=True,
-    help="Walltime for each worker job.",
+    help="Location to put temporary data if necessary",
 )
-@click.option(
-    "--queue",
-    default="economy",
-    type=str,
-    show_default=True,
-    help="Destination queue for each worker job. Passed to #PBS -q option.",
-)
-@click.option(
-    "--project",
-    default="",
-    type=str,
-    show_default=True,
-    help="Accounting string associated with each worker job. Passed to #PBS -A option.",
-)
-def cli(script, num_workers, cores, memory, walltime, queue, project):
+def cli(script, queue, project, walltime, num_workers,
+        num_processes, cores, memory, local_directory):
 
-    cluster = PBSCluster(
-        cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
-    )
+    cluster = PBSCluster(processes=num_processes, local_directory=local_directory,
+                         cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
+                         )
 
     # Write scheduler address to a file on a disk.
     # This allows us to pass this info to the dask script
@@ -87,9 +114,7 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
     while not cluster.pending_jobs:
         time.sleep(0.5)
 
-    # Get absolute path of the script
-    script_path = os.path.abspath(script)
-    cmd = ["python", script_path]
+    cmd = ["python", script]
 
     # Run the script via subprocess
     subprocess.check_call(cmd)
