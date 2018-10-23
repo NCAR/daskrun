@@ -8,7 +8,9 @@ import subprocess
 import string
 from dask_jobqueue import PBSCluster
 import daskrun
-import json 
+import json
+import time 
+
 
 version = daskrun.__version__
 
@@ -117,14 +119,17 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
     cluster = PBSCluster(
             cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
         )
-    cluster.scale(num_workers)
+    
     if os.path.exists('~/.daskrun/dask-run-scheduler.json'):
         os.remove('~/.daskrun/dask-run-scheduler.json')
 
-    os.makedirs('~/.daskrun')
+    os.makedirs('~/.daskrun', exist_ok=True)
     with open('~/.daskrun/dask-run-scheduler.json', 'w') as f:
         f.write(json.dumps({'scheduler': cluster.scheduler_address}))
+    cluster.scale(num_workers)
 
+    time.sleep(60)
+    
     script_path = os.path.abspath(script)
     cmd = ["python", script_path]
     subprocess.check_call(cmd)
