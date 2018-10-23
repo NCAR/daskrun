@@ -46,7 +46,7 @@ version = daskrun.__version__
 )
 @click.option(
     "--walltime",
-    "-w"
+    "-w",
     default="00:20:00",
     type=str,
     show_default=True,
@@ -91,7 +91,8 @@ def cli(script, queue, project, walltime, num_workers,
         num_processes, cores, memory, local_directory):
 
     cluster = PBSCluster(processes=num_processes, local_directory=local_directory,
-                         cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
+                         cores=cores, memory=memory, walltime=walltime,
+                         queue=queue, project=project
                          )
 
     # Write scheduler address to a file on a disk.
