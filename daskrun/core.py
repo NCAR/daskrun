@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""
+The main command line script. This is the script that is
+executed when using `daskrun`
+"""
+
 from __future__ import absolute_import
 from __future__ import print_function
 import click
@@ -57,14 +62,13 @@ version = daskrun.__version__
     help="Accounting string associated with each worker job. Passed to #PBS -A option.",
 )
 def cli(script, num_workers, cores, memory, walltime, queue, project):
-    print(script, num_workers, cores, memory, walltime, queue, project)
-
-    # submit_scheduler_job(queue=queue, project=project, walltime=walltime)
 
     cluster = PBSCluster(
         cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
     )
 
+    # Write scheduler address to a file on a disk.
+    # This allows us to pass this info to the dask script
     HOME = os.environ["HOME"]
     daskrun_dir = f"{HOME}/.daskrun/"
     scheduler_file_path = f"{daskrun_dir}/dask-run-scheduler.json"
@@ -76,13 +80,20 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
         f.write(json.dumps({"scheduler": cluster.scheduler_address}))
     cluster.scale(num_workers)
 
-    time.sleep(60)
+    # Make sure all reqeuested resources are available before
+    # Executing the script.
+    # cluster.pending_jobs is an OrderedDict.
+    # The script should be executed when this dict is empty
+    while not cluster.pending_jobs:
+        time.sleep(0.5)
 
+    # Get absolute path of the script
     script_path = os.path.abspath(script)
     cmd = ["python", script_path]
+
+    # Run the script via subprocess
     subprocess.check_call(cmd)
 
 
-# submit_scheduler_job()
 if __name__ == "__main__":
     cli()

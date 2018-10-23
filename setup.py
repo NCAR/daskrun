@@ -10,7 +10,7 @@ with open("README.md", encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
 
-requirements = ["dask-jobqueue"]
+requirements = ["dask-jobqueue", "click"]
 
 test_requirements = ["pytest", "flake8"]
 

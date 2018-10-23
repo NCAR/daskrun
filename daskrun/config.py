@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+""" The configuration utility script. This script is used
+to pass scheduler address to the running dask program.
+"""
+
 from __future__ import absolute_import
 from __future__ import print_function
 import json
