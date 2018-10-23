@@ -120,16 +120,19 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
             cores=cores, memory=memory, walltime=walltime, queue=queue, project=project
         )
     
-    if os.path.exists('~/.daskrun/dask-run-scheduler.json'):
-        os.remove('~/.daskrun/dask-run-scheduler.json')
+    HOME = os.environ["HOME"]
+    daskrun_dir = f'{HOME}/.daskrun/'
+    scheduler_file_path = f'{daskrun_dir}/dask-run-scheduler.json'
+    if os.path.exists(scheduler_file_path):
+        os.remove(scheduler_file_path)
 
-    os.makedirs('~/.daskrun', exist_ok=True)
-    with open('~/.daskrun/dask-run-scheduler.json', 'w') as f:
+    os.makedirs(daskrun_dir, exist_ok=True)
+    with open(scheduler_file_path, 'w') as f:
         f.write(json.dumps({'scheduler': cluster.scheduler_address}))
     cluster.scale(num_workers)
 
     time.sleep(60)
-    
+
     script_path = os.path.abspath(script)
     cmd = ["python", script_path]
     subprocess.check_call(cmd)
