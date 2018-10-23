@@ -125,8 +125,8 @@ def cli(script, num_workers, cores, memory, walltime, queue, project):
     with open('~/.daskrun/dask-run-scheduler.json', 'w') as f:
         f.write(json.dumps({'scheduler': cluster.scheduler_address}))
 
-
-    cmd = ["python", script]
+    script_path = os.path.abspath(script)
+    cmd = ["python", script_path]
     subprocess.check_call(cmd)
 
 # submit_scheduler_job()
